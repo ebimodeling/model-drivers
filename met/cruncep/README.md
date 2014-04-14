@@ -61,13 +61,13 @@ for VAR in rain press lwdown swdown tair qair uwind vwind ; do
 done                                                                                                                                                             
  ```
 
- ```
+ ```bash
 for VAR in rain press lwdown swdown tair qair uwind vwind; do
     ncpdq --no_tmp_fl -h -O -a lat,lon,time "${VAR}f.nc" "${VAR}.nc"
 done                                                                                                                                                             
  ```
 
- ```
+ ```bash
 cp rain.nc all.nc
 for VAR in press lwdown swdown tair qair uwind vwind ; do                                                   
    ncks --no_tmp_fl -A -C -h -v  "${VAR}"  "${VAR}.nc"  all.nc
