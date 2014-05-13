@@ -1,12 +1,15 @@
 #!/bin/bash
-#PBS -N big-Permute-nc-files
+#PBS -N big-permute-ncfile
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -d /home/groups/ebimodeling/met/cruncep/in/lwdown
-#PBS -M henryb@hush.com
+#PBS -d /home/groups/ebimodeling/met/cruncep/
 #PBS -m abe
+#PBS -e henryb@hush.com
+#PBS -q blacklight
+#PBS -l nodes=1:ppn=380
+#PBS -l mem=300GB
 
-module load gsl netcdf nco udunits
+module load gsl hdf5  netcdf nco udunits
 
 
 if [ ! -d $WKDIR ]; then
@@ -23,29 +26,9 @@ VAR=`basename $WKDIR`
 
 # this a concatentaion of cruncep_VAR files followed by a rechunking operation
 catFile1="ncrcat_${VAR}1.nc"
+outFile="${VAR}.nc"
 
-echo "$catFile1"
-
-
-for latdx in {000..359}; do
-
-   outFile1="tair_lon${latdx}.nc"
-   outFile2="tair_plon${latdx}.nc"
-   
-   #ncrcat_tair4 - has NO unlimited dims and is netCDF4            
-   ncks --no_tmp_fl --mk_rec_dmn lat -O -h -v $VAR -c -d lat,$latdx $catFile1 $outFile1;
-  
-   if [ -e "$outFile1" ]; then 
-      ncpdq --no_tmp_fl -O -h -v $VAR -c -a lat,lon,time $outFile1 $outFile2;
-      rm $outFile1; 
-   fi
-
-   echo "processed - $outFile1 $outFile2"
-
-done
-
-
-
+ncpdq --no_tmp_fl -h -O -a lat,lon,time "$catFile1"  "$outFile" 
 
 
 

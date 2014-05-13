@@ -1,12 +1,17 @@
 #!/bin/bash
-#PBS -N narr-daily-ncks${year}
+#PBS -N narr-daily-concatenation
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -d /home/groups/ebimodeling/met/NARR/out/
+#PBS -d /home/groups/ebimodeling/met/narr/threehourly
 #PBS -m abe
-#PBS -e dlebauer+biocluster@gmail.com
+#PBS -e henryb@hush.com
 
 module load gsl hdf5 netcdf nco
 
-ncrcat -n 35,4,1 1979.nc all.nc 
+#VAR="air.2m";
+#VAR="$1";
+
+ofile="${VAR}.nc";
+
+ncrcat --no_tmp_fl  -h -n 32,4,1  "${VAR}/${VAR}.u.1979.nc" "$ofile"
 
