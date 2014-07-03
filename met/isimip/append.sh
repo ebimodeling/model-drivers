@@ -1,4 +1,5 @@
 #!/bin/bash
+# what arubbish script !!
 
 afile="all_1960_1999_hadgem2-es_rcp6p0_2005-2099.nc";
 ncks --no_tmp_fl -A -v Adjust$ ps_bced_1960_1999_hadgem2-es_rcp6p0_2005-2099p.nc "$afile"
