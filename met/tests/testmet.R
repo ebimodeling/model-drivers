@@ -1,4 +1,5 @@
-source("/home/a-m/dlebauer/dev/pecan/models/biocro/inst/met_functions.R")
+source("/home/a-m/dlebauer/dev/pecan/modules/data.atmosphere/R/met_functions.R")
+.libPaths("/home/a-m/dlebauer/library/R")
 library(data.table)
 library(ncdf4)
 library(lubridate)
