@@ -10,3 +10,18 @@ Files are rechunked for fast time series reading, and combined into large files 
 Note that the original data are large, and not included in this repository. See `wget.sh` and README files for more information about the data sources" 
 
 
+### looking at file contents
+
+```
+ncwa -d lon,0.0 -d lat,51.0 all.nc ncwa.nc
+ncdump ncwa.nc |more
+
+## find closest grid point:
+ncks -d lon,50.0 -d lat,0.0 in.nc foo.nc
+## to end of the range
+ncks -d lon,50.0, -d lat,0.0, in.nc foo.nc
+
+
+## find record by index
+ncks -d lon,50 -d lat,0 in.nc foo.nc
+```
