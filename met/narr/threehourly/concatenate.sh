@@ -6,10 +6,16 @@
 #PBS -m abe
 #PBS -e henryb@hush.com
 
+# Date: 18-07-2014
+# Author: Henry Butowsky
+# Purpose: concatenate files in dir VAR along the record dimension time 
+#          start year=1979 end year=2010     
+# usage: concatenate.sh "VARNAME"          
+
 module load gsl hdf5 netcdf nco
 
-#VAR="air.2m";
-#VAR="$1";
+
+VAR="$1";
 
 ofile="${VAR}.nc";
 

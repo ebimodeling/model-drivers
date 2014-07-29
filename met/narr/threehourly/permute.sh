@@ -9,7 +9,14 @@
 #PBS -l nodes=1:ppn=10
 #PBS -l mem=300GB
 
-
+# Date: 18-07-2014
+# Author: Henry Butowsky
+# Purpose: permute dims for faster access
+#          start dims order (time/lat/lon) -              
+#          output dims order (lat,lon,time )               
+#          
+# usage: permute.sh "VARNAME"          
+#        looks in the cwd() for the file "VARNAME.nc"      
 
 module load gsl hdf5 netcdf nco
 
