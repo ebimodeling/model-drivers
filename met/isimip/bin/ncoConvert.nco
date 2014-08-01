@@ -1,0 +1,34 @@
+// Convert Temperaure vars from Kelvin to Celsius
+
+
+if( exists(tasAdjust) ) {
+   tasAdjust-=273.15f;
+   tasAdjust@units="Celsius";
+}
+
+if( exists(tasmaxAdjust) ) {
+  tasmaxAdjust-=273.15f;
+  tasmaxAdjust@units="Celsius";
+}
+
+if( exists(tasminAdjust) ) {
+  tasminAdjust-=273.15f;
+  tasminAdjust@units="Celsius";
+}
+
+
+if( exists(air_temperature) ) {
+   air_temperature-=273.15f;
+   air_temperature@units="Celsius";
+}
+
+if( exists(air_temperature_max) ) {
+   air_temperature_max-=273.15f;
+   air_temperature_max@units="Celsius";
+}
+
+if( exists(air_temperature_min) ) {
+   air_temperature_min-=273.15f;
+   air_temperature_min@units="Celsius";
+}
+

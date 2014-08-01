@@ -1,0 +1,36 @@
+// checks existance of vars and outputs name/size.
+
+
+// short input filenames
+if( exists(hurs) ) print("#hurs\n");
+
+if( exists(prAdjust) ) print("#prAdjust\n");
+if( exists(psAdjust) ) print("#psAdjust\n");
+
+if( exists(rldsAdjust) ) print("#rldsAdjust\n");
+if( exists(rsdsAdjust) ) print("#rsdsAdjust\n");
+
+if( exists(tasAdjust) ) print("#tasAdjust\n");
+if( exists(tasmaxAdjust) ) print("#tasmaxAdjust\n");
+if( exists(tasminAdjust) ) print("#tasminAdjust\n");
+
+if( exists(uasAdjust) ) print("#uasAdjust\n");
+if( exists(vasAdjust) ) print("#vasAdjust\n");
+if( exists(windAdjust) ) print("#windAdjust\n");
+
+
+// long input filenames
+if( exists(relative_humidity) ) print("#relative_humidity\n");
+if( exists(precipitation_flux) ) print("#precipitation_flux\n");
+if( exists(precipitation_flux) ) print("#precipitation_flux\n");
+if( exists(surface_pressure) ) print("#surface_pressure\n");
+if( exists(surface_downwelling_longwave_flux_in_air) ) print("#surface_downwelling_longwave_flux_in_air\n");
+if( exists(surface_downwelling_shortwave_flux_in_air) ) print("#surface_downwelling_shortwave_flux_in_air\n");
+
+if( exists(air_temperature) ) print("#air_temperature\n");
+if( exists(air_temperature_max) ) print("#air_temperature_max\n");
+if( exists(air_temperature_min) ) print("#air_temperature_min\n");
+
+if( exists(eastward_wind) ) print("#eastward_wind\n");
+if( exists(northward_wind) ) print("#northward_wind\n");
+if( exists(wind_speed) ) print("#wind_speed\n");

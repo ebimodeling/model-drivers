@@ -1,0 +1,16 @@
+// get size of time
+if ( exists(time) ){
+  tz=time.size().int();
+  print("#time ");print(tz,"%d");
+}
+
+if ( exists(lat) ){
+  latz=lat.size().int();
+  print("#lat ");print(latz,"%d");
+}
+
+
+if ( exists(lon) ){
+  lonz=lon.size().int();
+  print("#lon ");print(lonz,"%d");
+}
