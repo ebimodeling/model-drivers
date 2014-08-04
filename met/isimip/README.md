@@ -24,12 +24,11 @@ Below is a single var as detailed in the file [bin/myConfig.pm](bin/myConfig.pm)
    'oUnits'=>'kg m-2 s-1'           # units wanted in the final output nc file    
 },
 
+```
 
-################################################################################################################
+Documentation and examples can be found in the header of [`bin/isimipCondition.pl`](bin/isimipCondition.pl).
 
-
-
-
+```
  options flags
 
  (required) -action list|concatenate|append|convert|rename     
