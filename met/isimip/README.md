@@ -5,6 +5,8 @@ The perl script "isimipCondition.pl" allows the user to create a single netcdf f
 
 Below is a single var as detailed in the myConfig.pm.
 
+
+```
 'pr' => {                           # abbreviation as used in the vars flag       
    'iName'=>'prAdjust',             # the netcdf name in the input files                             
    'oName'=>'precipitation_flux',   # the isimip name we want in the final output  
@@ -53,5 +55,5 @@ Below is a single var as detailed in the myConfig.pm.
    rsds/ surface_downwelling_shortwave_flux_in_air, windAdjust / wind_speed
   isimipCondition.pl  -action rename $OUT/scratch/all_hadgem2-es_rcp8p5_2005-2099.nc   
 
-
+```
 
