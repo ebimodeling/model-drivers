@@ -1,10 +1,19 @@
 Using isimipCondition.pl
 
 
-The perl script "isimipCondition.pl" allows the user to create a single netcdf file for a given scenario and model. The operation is split into  5 actions as some of the steps, particularly append may take some time. The location  of the source nc files (for each scenario) and final target dirctory are detailed in the file bin/myConfig.pm.
+The perl script [`bin/isimipCondition.pl`](bin/isimipCondition.pl) allows the user to create a single netcdf file for a given scenario and model. 
+The operation is split into five actions: 
 
-Below is a single var as detailed in the myConfig.pm.
+1. list: lists files to be concatenated
+2. concatenate: combines variables together
+3. reorder / append: combines years into a single file record
+4. convert: converts units
+5. rename: renames variables
 
+
+The location  of the source nc files (for each scenario) and final target dirctory are detailed in the file bin/myConfig.pm.
+
+Below is a single var as detailed in the file [bin/myConfig.pm](bin/myConfig.pm).
 
 ```
 'pr' => {                           # abbreviation as used in the vars flag       
