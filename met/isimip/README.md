@@ -1,10 +1,21 @@
 Using isimipCondition.pl
 
 
-The perl script "isimipCondition.pl" allows the user to create a single netcdf file for a given scenario and model. The operation is split into  5 actions as some of the steps, particularly append may take some time. The location  of the source nc files (for each scenario) and final target dirctory are detailed in the file bin/myConfig.pm.
+The perl script [`bin/isimipCondition.pl`](bin/isimipCondition.pl) allows the user to create a single netcdf file for a given scenario and model. 
+The operation is split into five actions: 
 
-Below is a single var as detailed in the myConfig.pm.
+1. list: lists files to be concatenated
+2. concatenate: combines variables together
+3. reorder / append: combines years into a single file record
+4. convert: converts units
+5. rename: renames variables
 
+
+The location  of the source nc files (for each scenario) and final target dirctory are detailed in the file bin/myConfig.pm.
+
+Below is a single var as detailed in the file [bin/myConfig.pm](bin/myConfig.pm).
+
+```
 'pr' => {                           # abbreviation as used in the vars flag       
    'iName'=>'prAdjust',             # the netcdf name in the input files                             
    'oName'=>'precipitation_flux',   # the isimip name we want in the final output  
@@ -13,12 +24,11 @@ Below is a single var as detailed in the myConfig.pm.
    'oUnits'=>'kg m-2 s-1'           # units wanted in the final output nc file    
 },
 
+```
 
-################################################################################################################
+Documentation and examples can be found in the header of [`bin/isimipCondition.pl`](bin/isimipCondition.pl).
 
-
-
-
+```
  options flags
 
  (required) -action list|concatenate|append|convert|rename     
@@ -53,5 +63,5 @@ Below is a single var as detailed in the myConfig.pm.
    rsds/ surface_downwelling_shortwave_flux_in_air, windAdjust / wind_speed
   isimipCondition.pl  -action rename $OUT/scratch/all_hadgem2-es_rcp8p5_2005-2099.nc   
 
-
+```
 
