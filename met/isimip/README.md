@@ -1,5 +1,12 @@
-Using isimipCondition.pl
+## Accessing Data
 
+These Data are from the [ISIMIP fast-track project](https://www.pik-potsdam.de/research/climate-impacts-and-vulnerabilities/research/rd2-cross-cutting-activities/isi-mip/data-archive/fast-track-data-archive). Please see [Terms of use](https://www.pik-potsdam.de/research/climate-impacts-and-vulnerabilities/research/rd2-cross-cutting-activities/isi-mip/data-archive/fast-track-data-archive/terms-of-use).
+
+The [`wget scripts`](https://github.com/ebimodeling/model-drivers/search?utf8=%E2%9C%93&q=isimip+wget&type=Code) used to download the files for each scenario are in the `in/<scenario>` directories, e.g. `met/isimip/in/rcp4/wget*.sh`.
+
+## Concantenating and Re-chunking for extracting time-series
+
+### Using isimipCondition.pl
 
 The perl script [`bin/isimipCondition.pl`](bin/isimipCondition.pl) allows the user to create a single netcdf file for a given scenario and model. 
 The operation is split into five actions: 
