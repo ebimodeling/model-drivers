@@ -3,7 +3,7 @@
 These are for MsTMIP met driver files.
 
 The first step is to convert the time dim from fixed to unlimited so that the files can be concanated together.
-The script to use is lim2unlim.sh - This takes a single arg - the var-name which is the same as the dir-name.
+The script to use is `lim2unlim.sh` - This takes a single arg - the var-name which is the same as the dir-name.
 This step is very disk intensive 
 So a typical run would be:
 
