@@ -22,7 +22,7 @@ Appends the the 6 var files to  single one
 
 typical usage:
 
-``sh
+```sh
     # create concatenations
 
 
@@ -43,4 +43,4 @@ typical usage:
 
     #do append
     case.sh append
-``
+```
