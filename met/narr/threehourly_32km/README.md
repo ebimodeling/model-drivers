@@ -1,4 +1,14 @@
 
+### Use
+
+```sh
+wget.sh
+weather.sh
+rename_vars_convert_precip.sh
+????
+```
+
+### NOAA info
     U.S. Department of Commerce | National Oceanic & Atmospheric
     Administration | NOAA Research
     NOAA Earth System Research Laboratory
