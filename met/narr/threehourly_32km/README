@@ -1,3 +1,13 @@
+### Notes on data processing
+
+* ran wget.sh on July 28 2015
+* weather.sh run July 28 2015
+ * combine all files within year, placed in out/ 
+* concatenate.sh run July 29 2015
+ * combines years into a single file
+* next ... rename variables ...
+
+### NOAA Data Set Description and Use policy
 
     U.S. Department of Commerce | National Oceanic & Atmospheric
     Administration | NOAA Research
