@@ -1,0 +1,291 @@
+---
+title: "Check Met"
+author: "David LeBauer"
+date: "9/16/2014"
+output:
+  html_document:
+    fig_height: 3
+    fig_width: 8
+---
+
+```{r echo=FALSE, results='hide',message=FALSE}
+library(PEcAn.all, quietly = TRUE)
+library(BioCro, quietly = TRUE)
+devtools::load_all("~/dev/pecan/models/biocro/", quiet = TRUE)
+devtools::load_all("~/dev/pecan/modules/data.atmosphere/", quiet = TRUE)
+knitr::opts_knit$set(cache=TRUE, fig.width = 8, fig.height = 3, echo = FALSE, message = FALSE, results='hide')
+```
+
+
+### Compare to EBI farm Data
+
+Plots are paired: 1 year (2010) followed by 1 month range
+
+```{r}
+
+source('~/dev/pecan/models/biocro/R/met2model.BIOCRO.R')
+#ebifarm <- data.table(read.csv("/home/groups/ebimodeling/ebifarm_met_2009_2011.csv"), key = "yeardoytime")
+ebifarm <- fread("/home/dlebauer/.pecan/dbfiles/met/ebifarm_met_2009_2011.csv")
+setkey(ebifarm, "yeardoytime")
+ebifarm.sun <- data.table(read.csv("/home/dlebauer/.pecan/dbfiles/met/ebifarm_flux_2010.csv"), key = "yeardoytime")
+ebifarm <- merge(ebifarm, ebifarm.sun[,list(yeardoytime, solar = PARDown_Avg)])
+
+ebifarm$yeardoytime <- gsub("\\.", "", ebifarm$yeardoytime)
+time <- ebifarm[,list(year = substr(yeardoytime, 1, 4), doy = substr(yeardoytime, 5,7), hour = paste0(substr(yeardoytime, 8,9), ifelse(substr(yeardoytime, 10,10) == "0", ".0", ".5")))]
+time <- data.table(sapply(time, as.numeric))
+ebifarm <- cbind(time, ebifarm[,list(solar = solar, Temp = Tair_f, RH = RH_f/100, wind = ws, precip = rain)])
+#ebifarm <- ebifarm[year == 2010 & !grepl(".5", hour)]
+ebifarm <- ebifarm[!grepl(".5", hour)]
+
+ebifarm$source <- "ebifarm"
+
+date <- ymd(paste(ebifarm$year, "01", "01", sep = "-")) + days(ebifarm$doy) + hours(ebifarm$hour)
+start.date <- floor_date(min(date), unit = "day")
+end.date <- min(ymd("2010-12-31"), ceiling_date(max(date), unit = "day"))
+
+lat <- 40
+lon <- -88
+
+met.nc <- nc_open("/home/dlebauer/.pecan/dbfiles/met/cruncep/all.nc")
+met <- load.cfmet(met.nc, lat = lat, lon = lon, start.date = start.date, end.date = end.date)
+met.hr <- cfmet.downscale.time(cfmet = met, output.dt = 1)
+
+## This is in PEcAn.BIOCRO models/biocro/R/met2model.BIOCRO.R
+biocro.met <- cf2biocro(met.hr)
+biocro.met$source <- "cruncep"
+
+met <- rbind(ebifarm, biocro.met, use.names = FALSE)
+met$date <- ymd(paste(met$year, "01", "01", sep = "-")) + days(met$doy) + hours(met$hour)
+```
+
+```{r echo=FALSE, results='hide',message=FALSE}
+ggplot <- function(...) ggplot2::ggplot(...) + scale_color_manual(values = c("red", "blue"))
+theme_set(theme_bw())
+
+rh <- ggplot() +
+  geom_line(data = met, aes(date, RH, color = source), alpha = 0.5) + ggtitle("Relative Humidity (0-1)")
+
+precip <- ggplot() +
+  geom_line(data = met, aes(date, precip, color = source), alpha = 0.5) + ggtitle("Precipitation mm/d") + 
+  scale_y_sqrt()
+
+temp <- ggplot() +
+  geom_line(data = met, aes(date, Temp, color = source), alpha = 0.5) + ggtitle("Temperature C")
+wind <- ggplot() +
+  geom_line(data = met, aes(date, wind, color = source), alpha = 0.5) + ggtitle("Wind Speed m/s") + 
+  scale_y_sqrt()
+
+solar <- ggplot() +
+  geom_line(data = met, aes(date, solar, color = source), alpha = 0.5) + ggtitle("PAR")
+
+lims <- xlim(ymd("2010-08-01"), ymd("2010-08-31")) 
+#gridExtra::grid.arrange(rh, precip, temp, wind, solar)
+rh
+rh + lims
+precip
+precip + lims
+temp
+temp + lims
+wind
+wind + lims
+solar
+solar + lims
+
+#gridExtra::grid.arrange(rh + lims, precip + lims, temp + lims, wind + lims, solar + lims)
+
+```
+
+
+```{r ebifarm_histograms, echo=FALSE, results='hide',message=FALSE}
+## SolarR
+ggplot(data = met) + 
+  geom_point(aes(date, solar, color = source), alpha = 0.3) + ggtitle("SolarR")
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(solar, color = source), alpha = 0.8)
+
+## Temp
+ggplot(data = met) + 
+  geom_point(aes(date, Temp, color = source), alpha = 0.3) + ggtitle("Temp")
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(Temp, color = source), alpha = 0.8) 
+
+## RH
+ggplot(data = met) + 
+  geom_point(aes(date, RH, color = source), alpha = 0.3) + ggtitle("RH")
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(RH, color = source), alpha = 0.8) + scale_y_sqrt()
+
+## WindSpeed
+ggplot(data = met) + 
+  geom_point(aes(date, wind, color = source), alpha = 0.3) + ggtitle("Wind Speed")
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(wind, color = source), alpha = 0.8) + scale_y_sqrt()
+
+## Precip
+ggplot(data = met) + 
+  geom_point(aes(date, precip, color = source), alpha = 0.3) + ggtitle("Precipitation")
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(precip, color = source), alpha = 0.8) + scale_y_sqrt()
+```
+
+### Compare to Package Data `weather05`
+
+```{r}
+rm(met)
+start.date <- "2005-01-01"
+end.date <- "2005-12-31"
+
+lat <- 40
+lon <- -88
+
+met.nc <- nc_open("/home/dlebauer/.pecan/dbfiles/met/cruncep/all.nc")
+met <- load.cfmet(met.nc, lat = lat, lon = lon, start.date = start.date, end.date = end.date)
+met.hr <- cfmet.downscale.time(cfmet = met, output.dt = 1)
+
+## This is in PEcAn.BIOCRO models/biocro/R/met2model.BIOCRO.R
+biocro.met <- cf2biocro(met.hr)
+
+
+
+weather05$source <- "package"
+biocro.met$source <- "cruncep"
+
+met <- rbind(weather05, biocro.met, use.names = FALSE)
+met$date <- met$doy + met$hour/24
+
+setnames(met, 
+         c("solarR", "DailyTemp.C", "RH", "WindSpeed"),
+         c("solar", "Temp", "RH", "wind"))
+```
+
+
+
+```{r echo=FALSE, results='hide',message=FALSE}
+## SolarR
+ggplot(data = met) + 
+  geom_point(aes(date, solar, color = source), alpha = 0.3) + ggtitle("SolarR")
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(solar, color = source), alpha = 0.8)
+
+## Temp
+ggplot(data = met) + 
+  geom_point(aes(date, Temp, color = source), alpha = 0.3) + ggtitle("Temp")
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(Temp, color = source), alpha = 0.8) 
+
+## RH
+ggplot(data = met) + 
+  geom_point(aes(date, RH, color = source), alpha = 0.3) + ggtitle("RH")
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(RH, color = source), alpha = 0.8) + scale_y_sqrt()
+
+## WindSpeed
+ggplot(data = met) + 
+  geom_point(aes(date, wind, color = source), alpha = 0.3) + ggtitle("Wind Speed")
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(wind, color = source), alpha = 0.8) + scale_y_sqrt()
+
+## Precip
+ggplot(data = met) + 
+  geom_point(aes(date, precip, color = source), alpha = 0.3) + ggtitle("Precipitation")
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(precip, color = source), alpha = 0.8) + scale_y_sqrt()
+```
+
+# THE END
+
+Below are just some additional (mostly redundant), unevaluated plots
+
+```{r eval = FALSE}
+ggplot() + 
+  geom_freqpoly(data = biocro.met, aes(RH), color = "blue", alpha = 0.3) + 
+  geom_freqpoly(data = weather05, aes(RH), color = "red", alpha = 0.3) + ggtitle("RH")
+ggplot() + 
+  geom_freqpoly(data = biocro.met, aes(SolarR), color = "blue", alpha = 0.3) + 
+  geom_freqpoly(data = weather05, aes(solarR), color = "red", alpha = 0.3)
+ggplot() + 
+  geom_freqpoly(data = biocro.met, aes(precip), color = "blue", alpha = 0.3) + 
+  geom_freqpoly(data = weather05, aes(precip), color = "red", alpha = 0.3) + 
+  scale_y_sqrt()
+ggplot() + 
+  geom_freqpoly(data = biocro.met, aes(WS), color = "blue", alpha = 0.3) + 
+  geom_freqpoly(data = weather05, aes(WindSpeed), color = "red", alpha = 0.3)
+ggplot() + 
+  geom_freqpoly(data = biocro.met, aes(Temp), color = "blue", alpha = 0.3) + 
+  geom_freqpoly(data = weather05, aes(DailyTemp.C), color = "red", alpha = 0.3)
+
+
+```
+
+
+```{r eval=FALSE}
+
+## SolarR
+ggplot(data = met) + 
+  geom_point(aes(date, solarR, color = source), alpha = 0.3)
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(solarR, color = source), alpha = 0.8)
+
+## Temp
+ggplot(data = met) + 
+  geom_point(aes(date, DailyTemp.C, color = source), alpha = 0.3)
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(DailyTemp.C, color = source), alpha = 0.8) + scale_y_sqrt()
+
+## RH
+ggplot(data = met) + 
+  geom_point(aes(date, RH, color = source), alpha = 0.3)
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(RH, color = source), alpha = 0.8) + scale_y_sqrt()
+
+## WindSpeed
+ggplot(data = met) + 
+  geom_point(aes(date, WindSpeed, color = source), alpha = 0.3)
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(WindSpeed, color = source), alpha = 0.8) + scale_y_sqrt()
+
+## Precip
+ggplot(data = met) + 
+  geom_point(aes(date, precip, color = source), alpha = 0.3)
+
+ggplot(data = met) + 
+  geom_freqpoly(aes(precip, color = source), alpha = 0.8) + scale_y_sqrt()
+```
+
+```{r more_histograms, eval=FALSE}
+
+ggplot() + 
+  geom_freqpoly(data = biocro.met, aes(RH), color = "blue", alpha = 0.3) + 
+  geom_freqpoly(data = weather05, aes(RH), color = "red", alpha = 0.3) + ggtitle("RH")
+ggplot() + 
+  geom_freqpoly(data = biocro.met, aes(SolarR), color = "blue", alpha = 0.3) + 
+  geom_freqpoly(data = weather05, aes(solarR), color = "red", alpha = 0.3)
+ggplot() + 
+  geom_freqpoly(data = biocro.met, aes(precip), color = "blue", alpha = 0.3) + 
+  geom_freqpoly(data = weather05, aes(precip), color = "red", alpha = 0.3) + 
+  scale_y_sqrt()
+ggplot() + 
+  geom_freqpoly(data = biocro.met, aes(WS), color = "blue", alpha = 0.3) + 
+  geom_freqpoly(data = weather05, aes(WindSpeed), color = "red", alpha = 0.3)
+ggplot() + 
+  geom_freqpoly(data = biocro.met, aes(Temp), color = "blue", alpha = 0.3) + 
+  geom_freqpoly(data = weather05, aes(DailyTemp.C), color = "red", alpha = 0.3)
+
+}
+```
+
+
