@@ -533,8 +533,9 @@ sub getFiles($$$){
         $fstring="$VARS{$var}{'fName'}_$MODELS{$model}{'fName'}_$SCENARIOS{$scenario}{'fName'}_????-????.nc";
     }else{
         $fstring="$VARS{$var}{'fName'}_????_????_$MODELS{$model}{'fName'}_$SCENARIOS{$scenario}{'fName'}_????-????.nc";  
+        # $fstring="$VARS{$var}{'fName'}_[0123456789\-]*_$MODELS{$model}{'fName'}_$SCENARIOS{$scenario}{'fName'}_[0123456789\-]*.nc4";  
     }
-    
+    # print $fstring;
     # print STDERR "getFiles: Unable to locate \"$model\" directory \"$ncDir\"\n";        
  
     if (-e "$ncDir" ) {

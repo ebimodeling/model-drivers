@@ -16,13 +16,14 @@ INPUT="/home/groups/ebimodeling/met/narr/threehourly_32km/"
 OUTPUT="/home/groups/ebimodeling/met/narr/threehourly_32km/out/"
 
 ## variables 1= start year 2 = end year
-for year in `seq 1979 2014`; do
+#for year in `seq 1979 2014`; do
+for year in 2009; do
     echo "processing $year"
     for var in air.2m. apcp. dswrf. rhum.2m. soilm. uwnd.10m. vwnd.10m.;
       do
       for file in ${var}${year}.nc; do
 	  echo ${INPUT}${file}
-	  ionice -n 2 ncks -A ${INPUT}/${file} ${OUTPUT}/${year}.nc
+	  ncks -A ${INPUT}/${file} ${OUTPUT}/${year}.nc
       done
     done
     echo "$(date) done processing $y"

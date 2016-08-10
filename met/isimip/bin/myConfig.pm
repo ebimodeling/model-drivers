@@ -139,6 +139,19 @@ $OUT="/home/groups/ebimodeling/met/isimip/out";
                 'fName'=> 'rcp6p0',    
                  'dir' => "${IN}/rcp6"     
                 }, 
+      'rcp4' => {
+                'fName'=> 'rcp4p5',    
+                 'dir' => "${IN}/rcp4"     
+                }, 
+
+
+
+      'rcp2' => {
+                'fName'=> 'rcp2p6',    
+                 'dir' => "${IN}/rcp2"     
+                }, 
+
+
 
       'history' => {
                 'fName'=> 'hist',    
